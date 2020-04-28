@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Patch, Ip } from '@nestjs/common';
 import { ServerService } from './server.service';
 import { Server } from './server.entity';
 
@@ -31,8 +31,13 @@ export class ServerController {
     });
   }
   @Post()
-  addOne(@Body() server) : Promise<Server>{
-    return this.serverService.addOne(server as Server);
+  addOne(@Body() body, @Ip() ip) : Promise<Server>{
+    let server: Server = body as Server;
+    if (ip.substr(0, 7) == "::ffff:") {
+      ip = ip.substr(7)
+    }
+server.adress = ip;
+    return this.serverService.addOne(server);
   }
 }
 

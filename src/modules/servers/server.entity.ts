@@ -12,6 +12,9 @@ export class Server {
   adress: string;
 
   @Column()
+  port: number
+
+  @Column()
   map: string;
 
   @Column('datetime')
