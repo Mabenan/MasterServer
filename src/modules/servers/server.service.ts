@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Server } from './server.entity';
-import { Cron } from '@nestjs/schedule';
+import { Cron, Interval } from '@nestjs/schedule';
 
 @Injectable()
 export class ServerService {
@@ -27,12 +27,12 @@ export class ServerService {
     return await this.serverRepository.find();
   }
   
-  @Cron('45 * * * * *')
+  @Interval(10000)
   handleCron() {
     this.logger.log('Remove Server without actual Heartbeat');
     let date: Date = new Date(Date.now());
     var MS_PER_MINUTE = 60000;
-    var myStartDate = new Date(date.valueOf() - 2 * MS_PER_MINUTE);
+    var myStartDate = new Date(date.valueOf() - 1 * MS_PER_MINUTE);
     this.logger.log("Remove everything older than: " + myStartDate.toLocaleString());
     this.serverRepository.find().then((servers: Server[]) => {
       servers = servers.filter((value: Server)=>{
